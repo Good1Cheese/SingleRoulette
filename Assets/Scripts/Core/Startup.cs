@@ -1,4 +1,4 @@
-using Leopotam.Ecs;
+using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
 
@@ -12,6 +12,16 @@ public class Startup : MonoBehaviour
     {
         _world = ecsWorld;
         _systems = ecsSystems;
+    }
+
+    private void Awake()
+    {
+        var spawners = GetComponents<EntityInit>();
+
+        foreach (var spawner in spawners)
+        {
+            spawner.Init();
+        }
     }
 
     private void Start()

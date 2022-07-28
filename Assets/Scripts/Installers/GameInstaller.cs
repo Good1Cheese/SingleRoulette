@@ -1,4 +1,4 @@
-﻿using Leopotam.Ecs;
+﻿using Leopotam.EcsLite;
 using Zenject;
 
 public class GameInstaller : MonoInstaller
