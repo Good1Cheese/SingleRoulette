@@ -13,5 +13,8 @@ public class GameInstaller : MonoInstaller
 
         Container.BindInstance(systems)
             .AsSingle();
+
+        Container.BindFactory<Game, Game.Factory>()
+            .AsSingle();
     }
 }

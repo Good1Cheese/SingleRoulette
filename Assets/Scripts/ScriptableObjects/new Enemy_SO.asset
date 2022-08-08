@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: new Enemy_SO
   m_EditorClassIdentifier: 
   prefab: {fileID: 6964852176848639162, guid: 5d0d8dc0aa084cb4a81a98bc93686ea5, type: 3}
+  playable:
+    _explosionRadius: 3
+    _explosionForce: 10

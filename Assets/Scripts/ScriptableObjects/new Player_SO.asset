@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: new Player_SO
   m_EditorClassIdentifier: 
   prefab: {fileID: 6964852176848639162, guid: e4e0530f04af95b4e83a12dde88430f4, type: 3}
-  position: {x: 0, y: 1, z: -1.8}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
   rotatable:
     _multilier: {x: 20, y: 20}
+  playable:
+    _explosionRadius: 2
+    _explosionForce: 5

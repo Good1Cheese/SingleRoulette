@@ -6,26 +6,29 @@ public class Startup : MonoBehaviour
 {
     private EcsWorld _world;
     private EcsSystems _systems;
+    private Game _game;
 
     [Inject]
-    public void Construct(EcsWorld ecsWorld, EcsSystems ecsSystems)
+    public void Construct(EcsWorld ecsWorld, EcsSystems ecsSystems, Game.Factory gameFactory) 
     {
         _world = ecsWorld;
         _systems = ecsSystems;
+        _game = gameFactory.Create();
     }
 
     private void Awake()
     {
-        var spawners = GetComponents<EntityInit>();
+        var initiatables = GetComponents<IInitiatable>();
 
-        foreach (var spawner in spawners)
+        foreach (var initiatable in initiatables)
         {
-            spawner.Init();
+            initiatable.Init();
         }
     }
 
     private void Start()
     {
+        _game.Init();
         _systems.Init();
     }
 
