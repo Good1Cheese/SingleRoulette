@@ -1,14 +1,17 @@
 ﻿using System;
 using UnityEngine;
 
-[Serializable]
-public struct FireableExplosion
+public partial struct Fireable
 {
-    [SerializeField] private float explosionForce;
-    [SerializeField] private float explosionRadius;
-    [SerializeField] private float explosionRandomRadius;
+    [Serializable]
+    public struct Explosion
+    {
+        [SerializeField] private float explosionForce;
+        [SerializeField] private float explosionRadius;
+        [SerializeField] private float explosionRandomRadius;
 
-    public float ExplosionForce => explosionForce;
-    public float ExplosionRadius => explosionRadius;
-    public float ExplosionRandomRadius => explosionRandomRadius;
+        public float ExplosionForce => explosionForce;
+        public float ExplosionRadius => explosionRadius;
+        public float ExplosionRandomRadius => explosionRandomRadius;
+    }
 }

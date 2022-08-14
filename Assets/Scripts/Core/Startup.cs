@@ -2,44 +2,47 @@ using Leopotam.EcsLite;
 using UnityEngine;
 using Zenject;
 
-public class Startup : MonoBehaviour
+namespace SingleRoulette.Core
 {
-    private EcsWorld _world;
-    private EcsSystems _systems;
-    private Game _game;
-
-    [Inject]
-    public void Construct(EcsWorld ecsWorld, EcsSystems ecsSystems, Game.Factory gameFactory) 
+    public class Startup : MonoBehaviour
     {
-        _world = ecsWorld;
-        _systems = ecsSystems;
-        _game = gameFactory.Create();
-    }
+        private EcsWorld _world;
+        private EcsSystems _systems;
+        private Game _game;
 
-    private void Awake()
-    {
-        var initiatables = GetComponents<IInitiatable>();
-
-        foreach (var initiatable in initiatables)
+        [Inject]
+        public void Construct(EcsWorld ecsWorld, EcsSystems ecsSystems, Game.Factory gameFactory)
         {
-            initiatable.Init();
+            _world = ecsWorld;
+            _systems = ecsSystems;
+            _game = gameFactory.Create();
         }
-    }
 
-    private void Start()
-    {
-        _game.Init();
-        _systems.Init();
-    }
+        private void Awake()
+        {
+            var initiatables = GetComponents<IInitiatable>();
 
-    private void Update()
-    {
-        _systems.Run();
-    }
+            foreach (var initiatable in initiatables)
+            {
+                initiatable.Init();
+            }
+        }
 
-    private void OnDestroy()
-    {
-        _world.Destroy();
-        _systems.Destroy();
+        private void Start()
+        {
+            _game.Init();
+            _systems.Init();
+        }
+
+        private void Update()
+        {
+            _systems.Run();
+        }
+
+        private void OnDestroy()
+        {
+            _world.Destroy();
+            _systems.Destroy();
+        }
     }
 }

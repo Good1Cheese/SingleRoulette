@@ -1,4 +1,5 @@
 ﻿using Leopotam.EcsLite;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class FireSystem : IEcsRunSystem
@@ -7,8 +8,8 @@ public class FireSystem : IEcsRunSystem
     {
         EcsWorld world = systems.GetWorld();
 
-        EcsFilter playableFilter = world.Filter<Playable>().Inc<FireDelayMarker>().End();
-        EcsFilter fireableFilter = world.Filter<Fireable>().Inc<RotatedMarker>().End();
+        EcsFilter playableFilter = world.Filter<Playable>().Inc<MoveMarker>().End();
+        EcsFilter fireableFilter = world.Filter<Fireable>().Inc<Fireable.Sounds>().Inc<RotatedMarker>().Inc<MovedMarker>().Inc<SpunMarker>().End();
 
         foreach (int playableEntity in playableFilter)
         {
@@ -17,36 +18,33 @@ public class FireSystem : IEcsRunSystem
             foreach (int fireableEntity in fireableFilter)
             {
                 ref Fireable fireable = ref world.Get<Fireable>(fireableEntity);
+                ref Fireable.Sounds fireableSounds = ref world.Get<Fireable.Sounds>(fireableEntity);
 
-                Fire(world, fireable, playableEntity);
-                AddMoveDoneMarker(world);
-
-                world.Del<FireDelayMarker>(playableEntity);
+                world.Del<MoveMarker>(playableEntity);
+                world.Del<MovedMarker>(fireableEntity);
                 world.Del<RotatedMarker>(fireableEntity);
+                world.Del<SpunMarker>(fireableEntity);
+
+                Fire(world, fireable, fireableSounds, playableEntity, fireableEntity);
             }
         }
     }
 
-    private void Fire(EcsWorld world, in Fireable fireable, in int playableEntity)
+    private async void Fire(EcsWorld world, Fireable fireable, Fireable.Sounds fireableSounds, int playableEntity, int fireableEntity)
     {
+        await Task.Delay(fireable.DelayBeforeFireMilliseconds);
+
         int deathChance = Random.Range(1, 101);
 
-        if (fireable.DeadСhance <= deathChance)
+        if (fireable.DeadСhance >= deathChance)
         {
-            world.Add<DeathMarker>(playableEntity);
+            fireableSounds.AudioSource.PlayOneShot(fireableSounds.FireSound);
+            world.Add<ExplosionMarker>(playableEntity);
+
             return;
         }
 
-        world.Add<SurviveMarker>(playableEntity);
-    }
-
-    private void AddMoveDoneMarker(EcsWorld world)
-    {
-        EcsFilter games = world.Filter<GameMarker>().End();
-
-        foreach (int entity in games)
-        {
-            world.Add<MoveDoneMarker>(entity);
-        }
+        fireableSounds.AudioSource.PlayOneShot(fireableSounds.ClickSound);
+        world.Add<ExplosionMarker>(fireableEntity);
     }
 }

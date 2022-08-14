@@ -1,5 +1,6 @@
 ﻿using Leopotam.EcsLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 public static class EcsExtensions
 {
@@ -25,6 +26,13 @@ public static class EcsExtensions
         ref T result = ref pool.Add(entity);
 
         return ref result;
+    }
+
+    public async static void Add<T>(this EcsWorld world, int entity, int delay) where T : struct
+    {
+        await Task.Delay(delay);
+
+        world.Add<T>(entity);
     }
 
     public static void Del<T>(this EcsWorld world, in int entity) where T : struct

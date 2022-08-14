@@ -12,15 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fcfc9e182cf76740a06eec4e836626c, type: 3}
   m_Name: new Revolver_SO
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
   fireable:
-    _fireSound: {fileID: 8300000, guid: a93d18e6312f9584fa9b6dd6606959ca, type: 3}
-    _clickSound: {fileID: 8300000, guid: 34e453bff6611e74f89f9a130c4b0923, type: 3}
-    _delayBeforeFireMilliseconds: 2000
-    _rotateSmoothTime: 5
-    _rotateTime: 1.5
+    _delayBeforeFireMilliseconds: 1000
+    _delayBeforeNextMoveMilliseconds: 1000
+    _rotateSmoothTime: 10
+    _moveSmoothTime: 10
+    _yPosition: 2
+    _positionMultiplier: 3
     "_death\u0421hance": 50
   fireableExplosion:
     explosionForce: 5
     explosionRadius: 2
     explosionRandomRadius: 2
+  fireableSounds:
+    _fireSound: {fileID: 8300000, guid: a93d18e6312f9584fa9b6dd6606959ca, type: 3}
+    _clickSound: {fileID: 8300000, guid: 34e453bff6611e74f89f9a130c4b0923, type: 3}
+    _spinSound: {fileID: 8300000, guid: 0757ee4490e20d241ae94333e088c977, type: 3}

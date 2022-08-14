@@ -8,7 +8,7 @@ public class RotateSystem : IEcsRunSystem
     {
         EcsWorld world = systems.GetWorld();
 
-        EcsFilter playableFilter = world.Filter<Playable>().Inc<MoveMarker>().End();
+        EcsFilter playableFilter = world.Filter<Playable>().Inc<OneFrameMoveMarker>().End();
         EcsFilter fireableFilter = world.Filter<Fireable>().End();
 
         foreach (int playableEntity in playableFilter)
@@ -18,31 +18,21 @@ public class RotateSystem : IEcsRunSystem
             foreach (int fireableEntity in fireableFilter)
             {
                 ref Fireable fireable = ref world.Get<Fireable>(fireableEntity);
-                Quaternion targetRotation = GetTargetRotation(fireable, playable);
 
-                Rotate(fireable, targetRotation, world, fireableEntity);
+                RotateWithDelay(world, playable, fireable, fireableEntity);
             }
         }
     }
 
-    private Quaternion GetTargetRotation(in Fireable fireable, in Playable playable)
+    private async void RotateWithDelay(EcsWorld world, Playable playable, Fireable fireable, int entity)
     {
-        Vector3 directionToPlayable = playable.Transform.position - fireable.Transform.position;
+        Quaternion targetRotation = playable.SpawnPoint.parent.localRotation;
+        Quaternion currentRotation = fireable.Transform.localRotation;
 
-        return Quaternion.LookRotation(directionToPlayable);
-    }
-
-    private async void Rotate(Fireable fireable, Quaternion targetRotation, EcsWorld world, int entity)
-    {
-        float time = 0;
-
-        while (time < fireable.RotateTime)
+        while (!Mathf.Approximately(Mathf.Abs(Quaternion.Dot(targetRotation, currentRotation)), 1))
         {
-            time += Time.deltaTime;
-
-            fireable.Transform.rotation = Quaternion.Lerp(fireable.Transform.rotation,
-                                                          targetRotation,
-                                                          fireable.RotateSmoothTime * Time.deltaTime);
+            currentRotation = Quaternion.Lerp(currentRotation, targetRotation, fireable.RotateSmoothTime * Time.deltaTime);
+            fireable.Transform.localRotation = currentRotation;
 
             await Task.Yield();
         }
